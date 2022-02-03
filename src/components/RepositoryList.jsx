@@ -1,15 +1,9 @@
-import Constants from "expo-constants";
 import { FlatList, StyleSheet, View } from "react-native";
 import RepositoryItem from "./RepositoryItem";
 
 const styles = StyleSheet.create({
   separator: {
     height: 10,
-  },
-  container: {
-    marginTop: Constants.statusBarHeight,
-    flexGrow: 1,
-    flexShrink: 1,
   },
 });
 
@@ -65,13 +59,12 @@ const ItemSeparator = () => <View style={styles.separator} />;
 const RepositoryList = () => {
   return (
     <FlatList
-      style={styles.container}
+      // style={styles.container}
       data={repositories}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => {
         return <RepositoryItem {...item} />;
       }}
-      // other props
     />
   );
 };
