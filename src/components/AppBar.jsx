@@ -1,31 +1,41 @@
 import Constants from "expo-constants";
-import { Pressable, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Link } from "react-router-native";
 import theme from "../theme";
 import Text from "./Text";
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: Constants.statusBarHeight,
-    paddingBottom: 10,
+    marginTop: Constants.statusBarHeight,
+    padding: 10,
     backgroundColor: theme.colors.background,
     color: theme.colors.textPrimary,
   },
 });
 
-const AppBarTab = ({ children }) => {
+const AppBarTab = ({ children, to }) => {
   return (
-    <Pressable>
+    <Link to={to}>
       <Text fontWeight="bold" fontSize={"subheading"} color="textSecondary">
         {children}
       </Text>
-    </Pressable>
+    </Link>
   );
 };
 
 const AppBar = () => {
   return (
     <View style={styles.container}>
-      <AppBarTab>Repositories</AppBarTab>
+      <ScrollView
+        horizontal
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "space-around",
+        }}
+      >
+        <AppBarTab to="/">Repositories</AppBarTab>
+        <AppBarTab to="/signin">Sign In</AppBarTab>
+      </ScrollView>
     </View>
   );
 };
