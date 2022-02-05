@@ -6,7 +6,7 @@ const useRepositories = () => {
     fetchPolicy: "cache-and-network",
   });
 
-  return { repositories: data.repositories, loading, refetch, error };
+  return { repositories: data?.repositories, loading, refetch, error };
 };
 
 export default useRepositories;
