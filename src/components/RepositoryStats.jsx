@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { formatCounts } from "../utils";
+import { formatCounts } from "../utils/formatCounts";
 import Text from "./Text";
 
 const styles = StyleSheet.create({
