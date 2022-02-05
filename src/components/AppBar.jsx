@@ -1,6 +1,9 @@
+import { useQuery } from "@apollo/client";
 import Constants from "expo-constants";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Link } from "react-router-native";
+import { GET_CURRENT_USER } from "../graphql/queries";
+import { useSignOut } from "../hooks/useSignOut";
 import theme from "../theme";
 import Text from "./Text";
 
@@ -13,9 +16,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ children, to }) => {
+const AppBarTab = ({ children, to, ...props }) => {
   return (
-    <Link to={to}>
+    <Link to={to} {...props}>
       <Text fontWeight="bold" fontSize={"subheading"} color="textSecondary">
         {children}
       </Text>
@@ -24,6 +27,9 @@ const AppBarTab = ({ children, to }) => {
 };
 
 const AppBar = () => {
+  const { data, loading, error } = useQuery(GET_CURRENT_USER);
+  const signOut = useSignOut();
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -34,7 +40,13 @@ const AppBar = () => {
         }}
       >
         <AppBarTab to="/">Repositories</AppBarTab>
-        <AppBarTab to="/signin">Sign In</AppBarTab>
+        {data?.me ? (
+          <AppBarTab onPress={signOut} to="/signin">
+            Sign Out
+          </AppBarTab>
+        ) : (
+          <AppBarTab to="/signin">Sign In</AppBarTab>
+        )}
       </ScrollView>
     </View>
   );
