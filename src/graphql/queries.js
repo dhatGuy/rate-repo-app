@@ -33,3 +33,39 @@ export const GET_CURRENT_USER = gql`
     }
   }
 `;
+
+export const GET_REPOSITORY = gql`
+  query Repository($id: ID!) {
+    repository(id: $id) {
+      id
+      ownerName
+      name
+      fullName
+      ratingAverage
+      reviewCount
+      stargazersCount
+      forksCount
+      url
+      ownerAvatarUrl
+      description
+      language
+      reviews {
+        edges {
+          node {
+            id
+            userId
+            repositoryId
+            rating
+            createdAt
+            text
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
+      userHasReviewed
+    }
+  }
+`;

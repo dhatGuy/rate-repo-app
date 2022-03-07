@@ -38,8 +38,54 @@ const validationSchema = yup.object().shape({
   password: yup.string().required("Password is required"),
 });
 
+export const SignInContainer = ({ onSubmit }) => {
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={(values) => onSubmit(values)}
+      validationSchema={validationSchema}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <View style={styles.container}>
+          <FormikTextInput
+            name="username"
+            placeholder="Username"
+            value={values.username}
+            onChangeText={handleChange("username")}
+            onBlur={handleBlur("username")}
+            style={styles.input}
+            error={touched.username && errors.username}
+          />
+          <FormikTextInput
+            name="password"
+            placeholder="Password"
+            value={values.password}
+            onChangeText={handleChange("password")}
+            onBlur={handleBlur("password")}
+            style={styles.input}
+            secureTextEntry={true}
+            error={touched.password && errors.password}
+          />
+          <Pressable style={styles.btn} onPress={handleSubmit}>
+            <Text color={"white"} fontWeight={"bold"} style={styles.text}>
+              Sign in
+            </Text>
+          </Pressable>
+        </View>
+      )}
+    </Formik>
+  );
+};
+
 const SignIn = () => {
-  const [login, result] = useSignIn();
+  const [login] = useSignIn();
   const onSubmit = async (values) => {
     const { username, password } = values;
 
@@ -50,39 +96,8 @@ const SignIn = () => {
     }
   };
   return (
-    <View>
-      {/* <Text>The sign in view</Text> */}
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        {({
-          errors,
-          handleSubmit,
-          isSubmitting,
-          /* and other goodies */
-        }) => (
-          <View style={styles.container}>
-            <FormikTextInput
-              style={styles.input}
-              name="username"
-              placeholder="Username"
-            />
-            <FormikTextInput
-              style={styles.input}
-              secureTextEntry={true}
-              name="password"
-              placeholder="Password"
-            />
-            <Pressable style={styles.btn} onPress={handleSubmit}>
-              <Text color={"white"} fontWeight={"bold"} style={styles.text}>
-                Sign in
-              </Text>
-            </Pressable>
-          </View>
-        )}
-      </Formik>
+    <View style={styles.container}>
+      <SignInContainer onSubmit={onSubmit} />
     </View>
   );
 };
