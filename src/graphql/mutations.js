@@ -8,3 +8,12 @@ export const SIGNIN_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_REVIEW_MUTATION = gql`
+  mutation ($review: CreateReviewInput) {
+    createReview(review: $review) {
+      rating
+      text
+    }
+  }
+`;
