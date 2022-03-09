@@ -14,6 +14,9 @@ export const CREATE_REVIEW_MUTATION = gql`
     createReview(review: $review) {
       rating
       text
+      repository {
+        id
+      }
     }
   }
 `;

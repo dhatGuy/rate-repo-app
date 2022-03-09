@@ -28,6 +28,7 @@
     "@babel/eslint-parser": "^7.16.5",
     "@expo/metro-config": "^0.3.9",
     "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-native-picker/picker": "^2.3.1",
     "dotenv": "^16.0.0",
     "eslint": "^8.8.0",
     "eslint-plugin-react": "^7.28.0",

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import useRepositories from "../hooks/useRepositories";
+import FilterRepository from "./FilterRepository";
 import RepositoryItem from "./RepositoryItem";
 
 const styles = StyleSheet.create({
@@ -17,20 +19,25 @@ export const RepositoryListContainer = ({ repositories }) => {
     : [];
   return (
     <FlatList
-      // style={styles.container}
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => {
-        return <RepositoryItem {...item} />;
+        return <RepositoryItem key={item.id} {...item} />;
       }}
     />
   );
 };
 
 const RepositoryList = () => {
-  const { repositories } = useRepositories();
+  const [sortBy, setSortBy] = useState("");
+  const { repositories } = useRepositories(sortBy);
 
-  return <RepositoryListContainer repositories={repositories} />;
+  return (
+    <>
+      <FilterRepository sortBy={sortBy} setSortBy={setSortBy} />
+      <RepositoryListContainer repositories={repositories} />
+    </>
+  );
 };
 
 export default RepositoryList;

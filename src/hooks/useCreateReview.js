@@ -18,8 +18,10 @@ export const useCreateReview = () => {
           ownerName: values.owner,
         },
       },
-      onCompleted: () => {
-        navigate("/", { replace: true });
+      onCompleted: (data) => {
+        navigate(`/repository/${data.createReview.repository.id}`, {
+          replace: true,
+        });
       },
       onError: (error) => {
         console.log(error);
