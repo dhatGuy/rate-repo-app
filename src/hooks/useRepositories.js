@@ -16,10 +16,11 @@ const sortByOptions = {
   },
 };
 
-const useRepositories = (sortBy) => {
+const useRepositories = (sortBy = "createdAt", searchKeyword) => {
   const { data, loading, error, refetch } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
-    variables: sortByOptions[sortBy],
+    notifyOnNetworkStatusChange: true,
+    variables: { ...sortByOptions[sortBy], searchKeyword },
   });
 
   return { repositories: data?.repositories, loading, refetch, error };
