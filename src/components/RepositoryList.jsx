@@ -4,7 +4,6 @@ import useDebounce from "../hooks/useDebounce";
 import useRepositories from "../hooks/useRepositories";
 import RepoListHeader from "./RepoListHeader";
 import RepositoryItem from "./RepositoryItem";
-import Text from "./Text";
 
 const styles = StyleSheet.create({
   separator: {
@@ -20,7 +19,7 @@ export const RepositoryListContainer = ({
   setSortBy,
   sortBy,
   searchKeyword,
-  loading,
+  onEndReach,
 }) => {
   // Get the nodes from the edges array
   const repositoryNodes = repositories
@@ -32,10 +31,9 @@ export const RepositoryListContainer = ({
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={(item) => item.id}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.2}
       renderItem={({ item }) => {
-        if (loading) {
-          return <Text>loading...</Text>;
-        }
         return <RepositoryItem key={item.id} {...item} />;
       }}
       ListHeaderComponent={
@@ -44,7 +42,6 @@ export const RepositoryListContainer = ({
           searchText={searchKeyword}
           sortBy={sortBy}
           setSortBy={setSortBy}
-          loading={loading}
         />
       }
     />
@@ -55,10 +52,17 @@ const RepositoryList = () => {
   const [sortBy, setSortBy] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   const debouncedSearchKeyword = useDebounce(searchKeyword, 500);
-  const { repositories, loading } = useRepositories(
+  const { repositories, loading, fetchMore } = useRepositories(
     sortBy,
-    debouncedSearchKeyword
+    debouncedSearchKeyword,
+    8
   );
+
+  const onEndReach = () => {
+    if (!loading) {
+      fetchMore();
+    }
+  };
 
   return (
     <>
@@ -68,7 +72,7 @@ const RepositoryList = () => {
         sortBy={sortBy}
         setSortBy={setSortBy}
         repositories={repositories}
-        loading={loading}
+        onEndReach={onEndReach}
       />
     </>
   );

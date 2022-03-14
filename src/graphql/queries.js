@@ -5,13 +5,23 @@ export const GET_REPOSITORIES = gql`
     $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
     $searchKeyword: String
+    $first: Int
+    $after: String
   ) {
     repositories(
       orderBy: $orderBy
       orderDirection: $orderDirection
       searchKeyword: $searchKeyword
+      first: $first
+      after: $after
     ) {
       totalCount
+      pageInfo {
+        endCursor
+        startCursor
+        hasNextPage
+        hasPreviousPage
+      }
       edges {
         cursor
         node {
@@ -33,17 +43,8 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-export const GET_CURRENT_USER = gql`
-  query Me {
-    me {
-      id
-      username
-    }
-  }
-`;
-
 export const GET_REPOSITORY = gql`
-  query Repository($id: ID!) {
+  query Repository($id: ID!, $first: Int, $after: String) {
     repository(id: $id) {
       id
       ownerName
@@ -57,7 +58,13 @@ export const GET_REPOSITORY = gql`
       ownerAvatarUrl
       description
       language
-      reviews {
+      reviews(first: $first, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+          hasPreviousPage
+        }
+        totalCount
         edges {
           node {
             id
@@ -71,9 +78,41 @@ export const GET_REPOSITORY = gql`
               username
             }
           }
+          cursor
         }
       }
       userHasReviewed
+    }
+  }
+`;
+
+export const GET_CURRENT_USER = gql`
+  query Me($includeReviews: Boolean = false) {
+    me {
+      id
+      username
+      createdAt
+      reviews @include(if: $includeReviews) {
+        edges {
+          node {
+            id
+            userId
+            repositoryId
+            rating
+            createdAt
+            text
+            user {
+              id
+              username
+            }
+            repository {
+              id
+              name
+            }
+          }
+        }
+      }
+      reviewCount
     }
   }
 `;

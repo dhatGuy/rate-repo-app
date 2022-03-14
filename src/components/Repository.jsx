@@ -1,37 +1,32 @@
-import { useQuery } from "@apollo/client";
 import React from "react";
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import { useParams } from "react-router-native";
-import { GET_REPOSITORY } from "../graphql/queries";
+import useRepository from "../hooks/useRepository";
 import RepositoryInfo from "./RepositoryInfo";
 import ReviewItem from "./ReviewItem";
-import Text from "./Text";
 
 const Repository = () => {
   const { id } = useParams();
-  const { data, loading } = useQuery(GET_REPOSITORY, {
-    variables: {
-      id,
-    },
-  });
+  const { loading, data, fetchMore } = useRepository(id);
 
-  if (loading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+  // if (loading || !data) {
+  //   return (
+  //     <View>
+  //       <Text>Loading...</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <FlatList
-      data={data.repository.reviews.edges}
+      data={data?.repository.reviews.edges}
       renderItem={({ item }) => <ReviewItem key={item.id} review={item} />}
-      keyExtractor={({ id }) => id}
+      keyExtractor={({ node }) => node.id}
       ListHeaderComponent={() => (
         <RepositoryInfo repository={data.repository} />
       )}
-      // ...
+      onEndReached={() => fetchMore()}
+      onEndReachedThreshold={0.5}
     />
   );
 };

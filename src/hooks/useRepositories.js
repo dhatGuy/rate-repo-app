@@ -16,14 +16,38 @@ const sortByOptions = {
   },
 };
 
-const useRepositories = (sortBy = "createdAt", searchKeyword) => {
-  const { data, loading, error, refetch } = useQuery(GET_REPOSITORIES, {
+const useRepositories = (sortBy = "createdAt", searchKeyword, first = 0) => {
+  const variables = {
+    ...sortByOptions[sortBy],
+    searchKeyword,
+    first,
+  };
+
+  const { data, loading, fetchMore, ...result } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
-    notifyOnNetworkStatusChange: true,
-    variables: { ...sortByOptions[sortBy], searchKeyword },
+    variables,
   });
 
-  return { repositories: data?.repositories, loading, refetch, error };
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
+
+  return {
+    repositories: data?.repositories,
+    loading,
+    result,
+    fetchMore: handleFetchMore,
+  };
 };
 
 export default useRepositories;

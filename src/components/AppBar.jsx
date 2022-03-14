@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 
 const AppBarTab = ({ children, to, ...props }) => {
   return (
-    <Link to={to} {...props}>
+    <Link to={to} {...props} style={{ marginLeft: 10 }}>
       <Text fontWeight="bold" fontSize={"subheading"} color="textSecondary">
         {children}
       </Text>
@@ -27,21 +27,16 @@ const AppBarTab = ({ children, to, ...props }) => {
 };
 
 const AppBar = () => {
-  const { data, loading, error } = useQuery(GET_CURRENT_USER);
+  const { data } = useQuery(GET_CURRENT_USER);
   const signOut = useSignOut();
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        horizontal
-        contentContainerStyle={{
-          flexGrow: 1,
-          justifyContent: "space-around",
-        }}
-      >
+      <ScrollView horizontal>
         <AppBarTab to="/">Repositories</AppBarTab>
         {data?.me ? (
           <>
+            <AppBarTab to="/reviews">My Reviews</AppBarTab>
             <AppBarTab to="/newReview">Create a review</AppBarTab>
             <AppBarTab onPress={signOut} to="/signin">
               Sign Out
